@@ -13,6 +13,15 @@
             <textarea id="descricao" name="descricao" class="form-control" style="resize: none;" required></textarea>
         </div>
         <div class="form-group">
+            <label for="categoria_id">Categoria:</label>
+                <select id="categoria_id" name="categoria_id" class="form-control" required>
+                <option value="" disabled selected>Selecione uma categoria</option>
+                    @foreach($categorias as $categoria)
+                        <option value="{{ $categoria->id }}">{{ $categoria->nome }}</option>
+                    @endforeach
+                </select>
+        </div>
+        <div class="form-group">
             <label for="imagem">Imagem:</label>
             <input type="file" id="imagem" name="imagem" class="form-control-file" required>
         </div>
@@ -21,5 +30,4 @@
             <a href="{{ route('produtos.index')}}">Voltar</a>
         </div>
     </form>
-
 @endsection

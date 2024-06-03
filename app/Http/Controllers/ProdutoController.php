@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produto;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,7 +17,8 @@ class ProdutoController extends Controller
 
     public function create()
     {
-        return view('produtos.create');
+        $categorias = Categoria::all();
+        return view('produtos.create', compact('categorias'));
     }
 
     public function store(Request $request)
@@ -24,7 +26,8 @@ class ProdutoController extends Controller
         $request->validate([
             'nome' => 'required',
             'descricao' => 'required',
-            'imagem' => 'required|image'
+            'imagem' => 'required|image',
+            'categoria_id' => 'required|exists:categorias,id',
         ]);
 
         $path = $request->file('imagem')->store('imagens', 'public');
@@ -33,6 +36,7 @@ class ProdutoController extends Controller
             'nome' => $request->nome,
             'descricao' => $request->descricao,
             'imagem' => $path,
+            'categoria_id' => $request->categoria_id,
         ]);
 
         return redirect()->route('produtos.index')->with('success', 'Produto criado com sucesso!');
@@ -45,7 +49,8 @@ class ProdutoController extends Controller
 
     public function edit(Produto $produto)
     {
-        return view('produtos.edit', compact('produto'));
+        $categorias = Categoria::all();
+        return view('produtos.edit', compact('produto', 'categorias'));
     }
 
     public function update(Request $request, Produto $produto)
@@ -53,7 +58,8 @@ class ProdutoController extends Controller
         $request->validate([
             'nome' => 'required',
             'descricao' => 'required',
-            'imagem' => 'image'
+            'imagem' => 'image',
+            'categoria_id' => 'required|exists:categorias,id',
         ]);
 
         if ($request->hasFile('imagem')) {
@@ -65,6 +71,7 @@ class ProdutoController extends Controller
         $produto->update([
             'nome' => $request->nome,
             'descricao' => $request->descricao,
+            'categoria_id' => $request->categoria_id,
         ]);
 
         return redirect()->route('produtos.index')->with('success', 'Produto atualizado com sucesso!');

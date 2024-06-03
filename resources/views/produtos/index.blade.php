@@ -14,14 +14,18 @@
         @foreach ($produtos as $produto)
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
-                    <a href="{{ route('produtos.show', $produto->codigo) }}">{{ $produto->nome }}</a>
+                    <h5>{{ $produto->nome }}</h5>
+                    <p>{{ $produto->descricao }}</p>
+                    <img src="{{ asset('storage/' . $produto->imagem) }}" alt="{{ $produto->nome }}" class="img-thumbnail" width="150">
+                    <p>Categoria: {{ $produto->categoria ? $produto->categoria->nome : 'Sem categoria' }}</p>
                 </div>
                 <div>
-                    <a href="{{ route('produtos.edit', $produto->codigo) }}" class="btn btn-sm btn-warning">Editar</a>
-                    <form action="{{ route('produtos.destroy', $produto->codigo) }}" method="POST" style="display: inline;">
+                    <a href="{{ route('produtos.show', ['produto' => $produto->id]) }}" class="btn btn-info btn-sm">Ver</a>
+                    <a href="{{ route('produtos.edit', ['produto' => $produto->id]) }}" class="btn btn-warning btn-sm">Editar</a>
+                    <form action="{{ route('produtos.destroy', ['produto' => $produto->id]) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                        <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
                     </form>
                 </div>
             </li>
