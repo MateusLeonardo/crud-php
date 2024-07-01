@@ -55,7 +55,7 @@ class ProdutoController extends Controller
 
     public function update(Request $request, Produto $produto)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'nome' => 'required',
             'descricao' => 'required',
             'imagem' => 'image',
@@ -64,18 +64,18 @@ class ProdutoController extends Controller
 
         if ($request->hasFile('imagem')) {
             $path = $request->file('imagem')->store('imagens', 'public');
-            Storage::disk('public')->delete($produto->imagem);
-            $produto->imagem = $path;
+
+            if ($produto->imagem) {
+                Storage::disk('public')->delete($produto->imagem);
+            }
+            $validatedData['imagem'] = $path;
         }
 
-        $produto->update([
-            'nome' => $request->nome,
-            'descricao' => $request->descricao,
-            'categoria_id' => $request->categoria_id,
-        ]);
+        $produto->update($validatedData);
 
         return redirect()->route('produtos.index')->with('success', 'Produto atualizado com sucesso!');
     }
+
 
     public function destroy(Produto $produto)
     {
