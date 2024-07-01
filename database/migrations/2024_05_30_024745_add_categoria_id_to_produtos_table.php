@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('produtos', function (Blueprint $table) {
             if(!Schema::hasColumn('produtos', 'categoria_id')) {
-            $table->unsignedBigInteger('categoria_id')->nullable()->after('codigo');
+            $table->unsignedBigInteger('categoria_id')->nullable()->after('id');
             $table->foreign('categoria_id')->references('id')->on('categorias');
             };
         });
